@@ -1,0 +1,4 @@
+# 构建产物按字节原样保存（不做换行转换）
+# 目的：本地 build 出来的文件与仓库里的文件 sha256 一致，方便校验
+output/*.user.js  -text
+output/*.html     -text
