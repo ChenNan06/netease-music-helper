@@ -1,0 +1,24 @@
+# 凭据：等同密码，绝不入库
+tools/session.json
+
+# 依赖
+tools/node_modules/
+
+# 中间产物 / 证据 / 原始脚本留档
+build/
+logs/
+downloads/
+
+# 本机维护脚本（含本机绝对路径，不属于产品代码）
+tools/update-kb-*.py
+tools/append-changelog.py
+tools/fix-doc-*.py
+tools/patch-slim.py
+tools/prep-140.py
+tools/css-bisect*.mjs
+tools/.gitignore
+
+# 系统垃圾
+Thumbs.db
+desktop.ini
+.DS_Store

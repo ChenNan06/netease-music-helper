@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<title>网易云音乐 · 面板预览</title>
+<style>
+  /* 模拟网易云网页版的真实背景，用来检查面板与站点的配色关系 */
+  body{margin:0;font-family:-apple-system,"Microsoft YaHei",sans-serif;background:#f5f5f7;color:#333}
+  .bar{height:56px;background:#ec4141;display:flex;align-items:center;padding:0 20px;color:#fff;font-size:15px}
+  .wrap{max-width:900px;margin:24px auto;padding:0 20px}
+  .card{background:#fff;border:1px solid #e6e6ea;border-radius:8px;padding:16px;margin-bottom:12px}
+  .cover{width:120px;height:120px;background:#e9e9ee;border-radius:6px;float:left;margin-right:16px}
+  .h1{font-size:18px;font-weight:600;margin:0 0 6px}
+  .dim{color:#888;font-size:12px}
+  .table{width:100%;border-collapse:collapse;font-size:13px;margin-top:12px}
+  .table td,.table th{border-bottom:1px solid #eee;padding:8px 6px;text-align:left;color:#555}
+  .playbar{position:fixed;left:0;right:0;bottom:0;height:56px;background:#fff;border-top:1px solid #e6e6ea;
+           display:flex;align-items:center;gap:12px;padding:0 16px;font-size:13px;color:#444}
+  .play{width:32px;height:32px;border-radius:50%;background:#ec4141}
+  html.night body{background:#1b1b1b;color:#ddd}
+  html.night .card,html.night .playbar{background:#252525;border-color:#363636}
+  html.night .table td,html.night .table th{border-bottom-color:#333;color:#bbb}
+  html.night .cover{background:#333}
+</style>
+</head>
+<body>
+<div class="bar">网易云音乐 · 面板预览（模拟页面，非真实站点）</div>
+<div class="wrap">
+  <div class="card">
+    <div class="cover"></div>
+    <div class="h1">晴天</div>
+    <div class="dim">周杰伦 · 叶惠美 · 2003-07-31</div>
+    <div style="clear:both"></div>
+  </div>
+  <div class="card">
+    <table class="table">
+      <tr><th>#</th><th>标题</th><th>歌手</th><th>时长</th></tr>
+      <tr><td>1</td><td>晴天</td><td>周杰伦</td><td>04:29</td></tr>
+      <tr><td>2</td><td>七里香</td><td>周杰伦</td><td>04:59</td></tr>
+      <tr><td>3</td><td>以父之名</td><td>周杰伦</td><td>05:42</td></tr>
+    </table>
+  </div>
+</div>
+<div class="playbar m-playbar"><div class="play"></div><div class="words"><div class="name"><a href="/song?id=186016" style="color:#333;text-decoration:none">晴天</a></div></div></div>
+
+<script>
+/* ---------- 预览专用：GM_* 桩，只回放固定数据，不联网 ---------- */
+(function () {
+  var SONGS = [{ id: 186016, name: '晴天', alia: [], fee: 0, no: 1, cd: '',
+    ar: [{ id: 6452, name: '周杰伦' }],
+    al: { id: 18914, name: '叶惠美', picUrl: '', publishTime: 1057766400000 }, dt: 269000 }];
+  var PRIVS = [{ id: 186016, fee: 0, pl: 320000, dl: 320000, plLevel: 'lossless', dlLevel: 'lossless', cs: false, st: 0 }];
+  var LRC = '[ti:晴天]\n[00:01.00]故事的小黄花\n[00:05.50]从出生那年就飘着\n[00:10.20]童年的荡秋千';
+  var TLRC = '[00:01.00]The little yellow flower\n[00:05.50]Drifting since the year I was born';
+  var map = {};
+  window.GM_info = { scriptHandler: 'preview' };
+  window.GM_getValue = function (k, d) { return map[k] === undefined ? d : map[k]; };
+  window.GM_setValue = function (k, v) { map[k] = v; };
+  window.GM_registerMenuCommand = function () {};
+  window.GM_addStyle = function () {};
+  window.GM_download = function (o) { setTimeout(function () { o.onload && o.onload({}); }, 0); };
+  window.GM_xmlhttpRequest = function (o) {
+    var out = { status: 200, statusText: 'OK', responseHeaders: '' };
+    var j = { code: 200 };
+    if (/enhance\/player\/url/.test(o.url)) j = { code: 200, data: [{ id: 186016, url: 'http://x/a.mp3', level: 'lossless', size: 30000000, md5: 'm', br: 900000, type: 'flac' }] };
+    else if (/enhance\/download\/url/.test(o.url)) j = { code: 200, data: { id: 186016, url: null } };
+    else if (/v3\/song\/detail/.test(o.url)) j = { code: 200, songs: SONGS, privileges: PRIVS };
+    else if (/song\/lyric/.test(o.url)) j = { code: 200, lrc: { lyric: LRC }, tlyric: { lyric: TLRC } };
+    else if (/v6\/playlist\/detail/.test(o.url)) j = { code: 200, playlist: { id: 2884035, name: '原创榜', coverImgUrl: '', creator: { nickname: '网易云' }, trackIds: [{ id: 186016 }], tracks: SONGS } };
+    if (o.responseType === 'arraybuffer') {
+      out.response = new Uint8Array([0xff, 0xfb, 0x90, 0, 1, 2, 3, 4]).buffer;
+    } else {
+      out.responseText = JSON.stringify(j);
+      out.response = j;
+    }
+    out.finalUrl = o.url;
+    setTimeout(function () { o.onload && o.onload(out); }, 0);
+  };
+  window.navigator.clipboard = { writeText: function () { return Promise.resolve(); } };
+  window.HTMLMediaElement.prototype.play = function () { return Promise.resolve(); };
+  if (location.search.indexOf('night') >= 0) document.documentElement.classList.add('night');
+})();
+</script>
+<!--NCMH_SCRIPT-->
+<script>
+  /* 预览：打开面板，展示"单曲"页；?tab=list / ?tab=cloud / ?tab=tool 可切页 */
+  window.addEventListener('load', function () {
+    var params = new URLSearchParams(location.search);
+    var tab = params.get('tab') || 'song';
+    setTimeout(function () {
+      if (!window.__NCMH__) return;
+      window.__NCMH__.open();
+      var host = document.getElementById('ncmh-host');
+      if (!host || !host.shadowRoot) return;
+      if (tab !== 'song') {
+        var btn = host.shadowRoot.querySelector('[data-tab="' + tab + '"]');
+        if (btn) btn.click();
+      }
+      if (params.get('list') === '1') {
+        var f = host.shadowRoot.querySelector('[data-act="list-fetch"]');
+        if (f) f.click();
+      }
+      if (params.get('act') === 'lyric') {
+        var l = host.shadowRoot.querySelector('[data-act="view-lyric"]');
+        if (l) l.click();
+      }
+    }, 500);
+  });
+</script>
+</body>
+</html>
