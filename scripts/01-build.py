@@ -46,6 +46,12 @@ PARTS = [
 BANNER = """/* ---------------------------------------------------------------------------
  * 本文件由 scripts/01-build.py 自动拼装，请勿直接编辑。
  * 源码分片：src/parts/*.js
+ * 说明：构建不写入时间戳，同样的源码永远得到同样的字节（便于 diff 与校验哈希）。
+ * ------------------------------------------------------------------------- */"""
+
+BANNER_STAMPED = """/* ---------------------------------------------------------------------------
+ * 本文件由 scripts/01-build.py 自动拼装，请勿直接编辑。
+ * 源码分片：src/parts/*.js
  * 构建时间：{ts}
  * ------------------------------------------------------------------------- */"""
 
@@ -68,7 +74,9 @@ def build(release=False):
 
     import datetime
 
-    body = [BANNER.format(ts=datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))]
+    # 默认不写时间戳 → 可复现构建；需要留痕时加 --stamp
+    banner = BANNER_STAMPED.format(ts=datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")) if "--stamp" in sys.argv else BANNER
+    body = [banner]
     for name in PARTS[1:]:
         body.append("\n/* ===== part: %s ===== */\n" % name)
         body.append(read(os.path.join(PARTS_DIR, name)))
