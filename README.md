@@ -2,7 +2,22 @@
 
 > 把两个互相打架的油猴脚本**合并成一个**，统一到一个悬浮面板里。
 > 合并自：RunningCheese「NetEase 网易云音乐助手」v2.1（23 KB）与 cinvin「网易云音乐:歌曲下载&转存云盘…」v4.4.6（396 KB），两者均为 MIT。
-> 本会话日期：2026-11-25 ｜ 版本：**v1.3.0**
+> 本会话日期：2026-11-25 ｜ 版本：**v1.4.0**
+
+---
+
+## 安装（任选一种）
+
+| 方式 | 做法 |
+|---|---|
+| **直接装（推荐）** | 浏览器装好 Tampermonkey / Violentmonkey → 点这个链接：[网易云音乐-合一助手-v1.4.0.user.js](https://raw.githubusercontent.com/ChenNan06/netease-music-helper/main/output/%E7%BD%91%E6%98%93%E4%BA%91%E9%9F%B3%E4%B9%90-%E5%90%88%E4%B8%80%E5%8A%A9%E6%89%8B-v1.4.0.user.js) → 扩展会自动弹出安装页 |
+| **从 Releases** | 到 [Releases](https://github.com/ChenNan06/netease-music-helper/releases) 下载 `.user.js`，拖进扩展窗口 |
+| **自己构建** | `python scripts/01-build.py`（需要 Node 做语法检查），产物在 `output/` |
+
+装完打开任意 `music.163.com` 页面，右下角出现红色圆球，点开即面板。
+**旧的两个脚本请先停用或删除**，否则三者会同时挂在同一个页面上。
+
+> 本项目不修改网易云页面、不收集任何数据、不含任何凭据；登录态只在你自己的浏览器里。
 
 ---
 

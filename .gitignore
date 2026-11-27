@@ -15,6 +15,8 @@ tools/append-changelog.py
 tools/fix-doc-*.py
 tools/patch-slim.py
 tools/prep-140.py
+tools/redact.py
+tools/update-changelog-*.py
 tools/css-bisect*.mjs
 tools/.gitignore
 
