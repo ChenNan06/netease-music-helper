@@ -10,8 +10,8 @@
 
 | 方式 | 做法 |
 |---|---|
-| **直接装（推荐）** | 浏览器装好 Tampermonkey / Violentmonkey → 点这个链接：[网易云音乐-合一助手-v1.4.0.user.js](https://raw.githubusercontent.com/ChenNan06/netease-music-helper/main/output/%E7%BD%91%E6%98%93%E4%BA%91%E9%9F%B3%E4%B9%90-%E5%90%88%E4%B8%80%E5%8A%A9%E6%89%8B-v1.4.0.user.js) → 扩展会自动弹出安装页 |
-| **从 Releases** | 到 [Releases](https://github.com/ChenNan06/netease-music-helper/releases) 下载 `.user.js`，拖进扩展窗口 |
+| **Releases（推荐，已验证可下）** | 到 [Releases · v1.4.0](https://github.com/ChenNan06/netease-music-helper/releases/download/v1.4.0/netease-music-helper-v1.4.0.user.js) 直接下载 `.user.js`，拖进 Tampermonkey 窗口即可 |
+| **raw 直链**（部分网络环境可能被墙） | [点这里](https://raw.githubusercontent.com/ChenNan06/netease-music-helper/main/output/%E7%BD%91%E6%98%93%E4%BA%91%E9%9F%B3%E4%B9%90-%E5%90%88%E4%B8%80%E5%8A%A9%E6%89%8B-v1.4.0.user.js)，扩展会自动弹出安装页 |
 | **自己构建** | `python scripts/01-build.py`（需要 Node 做语法检查），产物在 `output/` |
 
 装完打开任意 `music.163.com` 页面，右下角出现红色圆球，点开即面板。
