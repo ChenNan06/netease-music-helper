@@ -2,7 +2,7 @@
 // @name         网易云音乐 · 合一助手
 // @name:en      NetEase Music · All-in-One Toolkit
 // @namespace    https://github.com/ChenNan06/ncm-toolkit
-// @version      1.4.0
+// @version      1.4.1
 // @description  合并「NetEase 网易云音乐助手」与「网易云音乐:歌曲下载&转存云盘」两个脚本：悬浮面板统一入口；单曲/歌单/专辑/歌手完整列表批量下载（三路取链自动降级）、封面与歌词（可合并翻译/罗马音）、云盘快传与云盘管理、音源探测、独立设置页。不改造网易云原生界面。
 // @author       Xs (合并自 RunningCheese / cinvin 的 MIT 脚本)
 // @license      MIT
@@ -56,7 +56,7 @@
    * 10-core · 常量
    * ======================================================================== */
 
-  const VERSION = '1.4.0';
+  const VERSION = '1.4.1';
   const LOG_PREFIX = '[NCMH]';
   const ORIGIN = 'https://music.163.com';
   /**
@@ -2625,8 +2625,9 @@ textarea:focus { outline: none; border-color: var(--accent); }
 
 .pf { display: flex; flex-direction: column; border-top: 1px solid var(--border); background: var(--bg); flex: 0 0 auto; }
 .pfrow { display: flex; align-items: center; gap: 8px; padding: 8px 12px; }
-/* 3px 极简进度条：单曲取字节/批量整体进度都用它，比在正文里堆文字安静得多 */
-.slimbar { height: 3px; background: var(--bg3); overflow: hidden; position: relative; }
+/* 进度条：**空闲时高度 0（完全不占视觉），有任务才展开 3px** + 右下角百分比文字 */
+.slimbar { height: 0; background: var(--bg3); overflow: hidden; position: relative; transition: height .15s ease; }
+.slimbar.on, .slimbar.indet { height: 3px; }
 .slimbar > i {
   display: block; height: 100%; width: 0; background: var(--accent);
   transition: width .25s ease; opacity: 0;
@@ -2636,6 +2637,10 @@ textarea:focus { outline: none; border-color: var(--accent); }
 @keyframes ncmh-slide {
   0% { transform: translateX(-110%); }
   100% { transform: translateX(330%); }
+}
+.pfpct {
+  margin-left: auto; flex: 0 0 auto; font-size: 11px; color: var(--accent);
+  font-variant-numeric: tabular-nums; letter-spacing: .3px;
 }
 .pf .status { flex: 1; font-size: 11.5px; color: var(--text3); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
@@ -2695,7 +2700,7 @@ textarea:focus { outline: none; border-color: var(--accent); }
   <div class="body" id="body"></div>
   <div class="pf">
     <div class="slimbar" id="slimbar"><i></i></div>
-    <div class="pfrow"><span class="status" id="status">就绪</span></div>
+    <div class="pfrow"><span class="status" id="status">就绪</span><span class="pfpct" id="pfpct"></span></div>
   </div>
 </div>
 <div class="toasts" id="toasts"></div>`;
@@ -3502,24 +3507,29 @@ ${DEV_TOOLS ? '<div class="note">「导出登录态」是开发期排错工具�
     },
 
     /**
-     * 底部 2px 进度条
-     * @param {number|'indet'|null} v 百分比 / 不确定动画 / null=隐藏
+     * 底部进度条（空闲时高度 0，完全不占视觉；有任务才展开）
+     * @param {number|'indet'|null} v 百分比 / 不确定动画 / null=收起
      */
     slim(v) {
       const bar = this.wrap && this.wrap.querySelector('#slimbar');
       const fill = bar && bar.querySelector('i');
+      const pct = this.wrap && this.wrap.querySelector('#pfpct');
       if (!bar || !fill) return;
       if (v == null) {
         bar.className = 'slimbar';
         fill.style.width = '0%';
+        if (pct) pct.textContent = '';
         return;
       }
       if (v === 'indet') {
         bar.className = 'slimbar indet';
+        if (pct) pct.textContent = '···';
         return;
       }
+      const n = clamp(Number(v) || 0, 0, 100);
       bar.className = 'slimbar on';
-      fill.style.width = clamp(Number(v) || 0, 0, 100) + '%';
+      fill.style.width = n + '%';
+      if (pct) pct.textContent = Math.round(n) + '%';
     },
 
     /** 通用弹窗 */

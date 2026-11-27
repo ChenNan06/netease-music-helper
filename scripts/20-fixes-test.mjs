@@ -186,16 +186,20 @@ const r2 = await I.playInPage(UI.state.song);
 ok('走了 audio 通道', r2.ok && r2.via === 'audio', r2.via || (r2.attempts || []).join('|'));
 ok('audio.src 被设置成音源地址', !!audio.src && /\.mp3/.test(audio.src), audio.src.slice(0, 60));
 
-section('7. 底部极简进度条');
+section('7. 底部进度条（空闲收起 / 运行展开 + 百分比）');
 const bar = shadow().querySelector('#slimbar');
-ok('存在 3px 进度条', !!bar);
+const pct = shadow().querySelector('#pfpct');
+ok('存在进度条元素', !!bar && !!pct);
+ok('空闲时高度为 0（不占视觉）', bar.className === 'slimbar', 'class=' + bar.className);
 UI.slim('indet');
 ok('不确定态 = indet 类', bar.className.includes('indet'), bar.className);
+ok('不确定态有文字提示（···）', pct.textContent === '···', JSON.stringify(pct.textContent));
 UI.slim(42);
 const fill = bar.querySelector('i');
 ok('确定态 = 宽度 42%', bar.className.includes('on') && fill.style.width === '42%', bar.className + ' ' + fill.style.width);
+ok('确定态显示 42%', pct.textContent === '42%', JSON.stringify(pct.textContent));
 UI.slim(null);
-ok('隐藏后宽度归零', fill.style.width === '0%' && !bar.className.includes('on'), bar.className);
+ok('收起后宽度归零、文字清空', fill.style.width === '0%' && pct.textContent === '' && bar.className === 'slimbar', bar.className);
 
 console.log('\n========================================');
 console.log('通过 ' + pass + ' 项，失败 ' + fails.length + ' 项');

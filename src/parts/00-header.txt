@@ -2,7 +2,7 @@
 // @name         网易云音乐 · 合一助手
 // @name:en      NetEase Music · All-in-One Toolkit
 // @namespace    https://github.com/ChenNan06/ncm-toolkit
-// @version      1.4.0
+// @version      1.4.1
 // @description  合并「NetEase 网易云音乐助手」与「网易云音乐:歌曲下载&转存云盘」两个脚本：悬浮面板统一入口；单曲/歌单/专辑/歌手完整列表批量下载（三路取链自动降级）、封面与歌词（可合并翻译/罗马音）、云盘快传与云盘管理、音源探测、独立设置页。不改造网易云原生界面。
 // @author       Xs (合并自 RunningCheese / cinvin 的 MIT 脚本)
 // @license      MIT

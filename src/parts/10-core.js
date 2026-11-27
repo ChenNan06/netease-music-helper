@@ -21,7 +21,7 @@
    * 10-core · 常量
    * ======================================================================== */
 
-  const VERSION = '1.4.0';
+  const VERSION = '1.4.1';
   const LOG_PREFIX = '[NCMH]';
   const ORIGIN = 'https://music.163.com';
   /**
